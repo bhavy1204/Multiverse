@@ -1,35 +1,30 @@
-import './App.css'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, Navigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
-import { fetchUser } from './features/authSlice.js'
-
-// Components
-import PageNotFound from './components/utils/PageNotFound.jsx'
-import Signup from './components/Signup.jsx'
-import Login from './components/Login.jsx'
-import Dashboard from './components/user/Dashboard.jsx'
-import VideoPlaying from './components/Home/VideoPlaying.jsx'
-import TweetsGrid from './components/Home/Tweets/TweetsGrid.jsx'
-import CardGrid from './components/Home/Videos/CardGrid.jsx'
-import LayoutWithNavbar from "./components/Home/LayoutWithNavbar.jsx"
-import History from './components/user/History/History.jsx'
-import MyVideos from './components/user/MyVideos/MyVideos.jsx'
-import UploadVideos from './components/user/upload/UploadVideos.jsx'
-import { UserChannel } from './components/user/UserChannel.jsx'
-import MyPosts from './components/user/posts/MyPosts.jsx'
-import SubscribeTo from './components/user/subscribedTo/SubscribeTo.jsx'
-import MyLikedVideo from './components/user/liked/videos/MyLikedVideo.jsx'
-import MyLikedPost from './components/user/liked/posts/MyLikedPost.jsx'
-import Playlist from './components/user/playlist/Playlist.jsx'
-import PlaylistVideoContainer from './components/user/playlist/PlaylistVideoContainer.jsx'
-import SearchResults from './components/Home/SearchResults.jsx'
 import { Toaster } from 'react-hot-toast'
 
-// Protected Route wrapper
-import { Navigate } from 'react-router-dom'
-import ComingSoon from './components/utils/ComingSoon.jsx'
+import { fetchUser } from '@/store/slices/authSlice'
+
+import PageNotFound from '@/components/common/PageNotFound'
+import ComingSoon from '@/components/common/ComingSoon'
+import Signup from '@/components/auth/Signup'
+import Login from '@/components/auth/Login'
+import HomePage from '@/components/layout/HomePage'
+import CardGrid from '@/components/public/videos/CardGrid'
+import TweetsGrid from '@/components/public/tweets/TweetsGrid'
+import SearchResults from '@/components/public/SearchResults'
+import VideoPlaying from '@/components/public/VideoPlaying'
+import Dashboard from '@/components/dashboard/Dashboard'
+import { UserChannel } from '@/components/dashboard/UserChannel'
+import History from '@/components/dashboard/history/History'
+import MyVideos from '@/components/dashboard/my-videos/MyVideos'
+import UploadVideos from '@/components/dashboard/upload/UploadVideos'
+import MyPosts from '@/components/dashboard/posts/MyPosts'
+import SubscribeTo from '@/components/dashboard/subscriptions/SubscribeTo'
+import MyLikedVideo from '@/components/dashboard/liked/videos/MyLikedVideo'
+import MyLikedPost from '@/components/dashboard/liked/posts/MyLikedPost'
+import Playlist from '@/components/dashboard/playlist/Playlist'
+import PlaylistVideoContainer from '@/components/dashboard/playlist/PlaylistVideoContainer'
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useSelector((state) => state.auth)
@@ -65,7 +60,7 @@ function App() {
         <Route path='/login' element={<Login />} />
 
         {/* Public routes with navbar */}
-        <Route element={<LayoutWithNavbar />} >
+        <Route element={<HomePage />} >
           <Route path='/' element={<CardGrid />} />
           <Route path='/home/videos' element={<CardGrid />} />
           <Route path='/home/tweets' element={<TweetsGrid />} />
