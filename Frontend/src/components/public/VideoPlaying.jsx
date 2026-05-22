@@ -5,7 +5,12 @@ import { useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom"
 import { ThumbsUp, ThumbsDown, Share2, MessageCircle, DownloadIcon, Link, Facebook, ListPlus } from "lucide-react";
 import CommentsContainer from "./CommentsContainer";
-import api from "@/api/client";
+import { getVideoById, getAllVideos } from "@/api/video.api";
+import { getVideoComments, addComment } from "@/api/comment.api";
+import { toggleSubscribe, getSubscriptionStatus } from "@/api/subscription.api";
+import { toggleVideoLike } from "@/api/like.api";
+import { toggleVideoDislike } from "@/api/dislike.api";
+import { getUserPlaylists, addVideoToPlaylist } from "@/api/playlist.api";
 import Toast, { Toaster } from "react-hot-toast"
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUser } from "@/store/slices/authSlice";
@@ -73,7 +78,7 @@ export default function VideoPlaying() {
     useEffect(() => {
         const fetchVideoData = async () => {
             try {
-                const res = await api.get(`/v1/video/get/${videoId}`, { withCredentials: true });
+                const res = await getVideoById(videoId, { withCredentials: true });
                 console.log("this is calling teh video res :---", res);
                 setMainVideoData(res.data.data.result);
                 setLikes(res.data.data.like);
@@ -93,7 +98,7 @@ export default function VideoPlaying() {
     useEffect(() => {
         const fetchComments = async () => {
             try {
-                const res = await api.get(`/v1/comment/v/${videoId}`, { withCredentials: true });
+                const res = await getVideoComments(videoId, { withCredentials: true });
                 console.log("Comment fetch res : ", res);
                 setComment(res.data.data);
             } catch (error) {
@@ -110,7 +115,7 @@ export default function VideoPlaying() {
     useEffect(() => {
         const fetchVideos = async () => {
             try {
-                const res = await api.get(`/v1/video/get/all`, { withCredentials: true });
+                const res = await getAllVideos(undefined, { withCredentials: true });
                 // console.log(res);
                 setVideos(res.data.data);
             } catch (error) {
@@ -126,7 +131,7 @@ export default function VideoPlaying() {
     // For subscribe toggle
     const handleSubscribe = async () => {
         try {
-            const res = await api.post(`/v1/subscription/toggleSubscribe/${mainVideoData?.owner?._id}`)
+            const res = await toggleSubscribe(mainVideoData?.owner?._id)
             if (res.data.message === "subscribed") {
                 setSubscribed(true);
             } else {
@@ -145,7 +150,7 @@ export default function VideoPlaying() {
             if (!mainVideoData?.owner?._id)
                 return;
             try {
-                const res = await api.get(`/v1/subscription/status/${mainVideoData?.owner?._id}`);
+                const res = await getSubscriptionStatus(mainVideoData?.owner?._id);
                 // console.log("THIS IS RES FROM EFFECT >> ", res)
                 setSubscribed(res.data.data.isSubscribed)
             } catch (error) {
@@ -158,7 +163,7 @@ export default function VideoPlaying() {
     // like Toggle 
     const handleLikeToggle = async () => {
         try {
-            const res = await api.post(`/v1/like/toggle/v/${mainVideoData?._id}`);
+            const res = await toggleVideoLike(mainVideoData?._id);
             console.log("LIKE KA RES ", res);
             setIsLiked(res.data.data.isLiked);
             setLikes(res.data.data.likesCount);
@@ -170,7 +175,7 @@ export default function VideoPlaying() {
     // dislike toggle 
     const handleDislikeToggle = async () => {
         try {
-            const res = await api.post(`/v1/dislike/toggle/v/${mainVideoData?._id}`);
+            const res = await toggleVideoDislike(mainVideoData?._id);
             console.log("DISLIKE KA RES >> ", res)
             setIsDisliked(res.data.data.isDisliked)
             setDislikes(res.data.data.dislikesCount)
@@ -230,7 +235,7 @@ export default function VideoPlaying() {
     const fetchPlaylists = async () => {
         try {
             if (!user?.data?._id) return;
-            const res = await api.get(`/v1/playlist/u/getplaylist/${user?.data?._id}`);
+            const res = await getUserPlaylists(user?.data?._id);
             setPlaylists(res.data.data)
         } catch (error) {
             console.error("Error fetching playlists:", error);
@@ -249,7 +254,7 @@ export default function VideoPlaying() {
     const handleSavePlaylists = async () => {
         try {
             await Promise.all(selectedPlaylists.map(plId =>
-                api.patch(`/v1/playlist/p/addVideo/${plId}/${videoId}`)
+                addVideoToPlaylist(plId, videoId)
             ));
             Toast.success("Video added to playlists!");
             setSelectedPlaylists([]); // clear selection
@@ -268,7 +273,7 @@ export default function VideoPlaying() {
         console.log("Comment form data", user?.data?._id, form.content, mainVideoData?._id)
 
         try {
-            const res = await api.post("/v1/comment/v", {
+            const res = await addComment({
                 ownerId: user?.data?._id,
                 content: form.content,
                 videoId: mainVideoData?._id,

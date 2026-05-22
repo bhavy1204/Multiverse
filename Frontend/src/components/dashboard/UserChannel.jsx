@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUser } from '@/store/slices/authSlice';
 import { useEffect } from 'react';
-import api from '@/api/client';
+import { getUserChannelProfile } from '@/api/user.api';
 import { useState } from 'react';
 
 
@@ -22,7 +22,7 @@ export const UserChannel = () => {
     useEffect(() => {
         const getSubscribers = async () => {
             try {
-                const res = await api.get(`v1/users/c/${user?.data?.username}`);
+                const res = await getUserChannelProfile(user?.data?.username);
                 // console.log("USER DETAILS :: ",user );
                 setSubscribers(res.data.data.subcribersCount)
                 setChannel(res.data.data.username)

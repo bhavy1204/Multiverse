@@ -2,6 +2,7 @@ import { useState, useRef, use } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom"
 import { setUser } from "@/store/slices/authSlice";
+import { googleAuthCallback, registerUser } from "@/api/auth.api";
 
 export default function Signup() {
 
@@ -15,7 +16,7 @@ export default function Signup() {
     // google callback
     const handleSuccess = async (credentialResponse) => {
         try {
-            const res = await api.post("/v1/auth/google/callback", {
+            const res = await googleAuthCallback({
                 token: credentialResponse.credential,
             });
             console.log("Logged in:", res.data);
@@ -45,7 +46,7 @@ export default function Signup() {
 
 
         try {
-            const res = await api.post("/v1/users/register", formData, {
+            const res = await registerUser(formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
 

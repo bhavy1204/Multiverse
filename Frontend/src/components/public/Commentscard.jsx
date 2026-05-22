@@ -1,6 +1,6 @@
 import { ThumbsDown, ThumbsUp } from "lucide-react"
 import { useSelector } from "react-redux";
-import api from "@/api/client";
+import { deleteComment, updateComment } from "@/api/comment.api";
 import { useState } from "react";
 import { Form } from "react-router-dom";
 
@@ -27,7 +27,7 @@ export default function Commentscard({ owner, content, id }) {
 
     const onDelete = async () => {
         try {
-            const res = await api.delete(`v1/comment/c/${id}`);
+            const res = await deleteComment(id);
         } catch (error) {
             console.log("comment delete error : ", error)
         }
@@ -37,7 +37,7 @@ export default function Commentscard({ owner, content, id }) {
         const commentId = id;
         e.preventDefault();
         try {
-            const res = await api.patch(`v1/comment/c/${commentId}`, {
+            const res = await updateComment(commentId, {
                 newContent: form.newContent,
             });
             setIsEditable(false);

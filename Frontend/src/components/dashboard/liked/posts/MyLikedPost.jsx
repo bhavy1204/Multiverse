@@ -1,7 +1,7 @@
 import React from 'react'
 // import MyLikedVideoContainer from './MyLikedVideoContainer'
 import { useState, useEffect } from 'react';
-import api from '@/api/client';
+import { getLikedTweets, toggleTweetLike } from '@/api/like.api';
 import toast from 'react-hot-toast';
 import MyLikedPostContainer from './MyLikedPostContainer'
 
@@ -12,7 +12,7 @@ const MyLikedPost = () => {
     useEffect(() => {
         const fetchLikedPosts = async () => {
             // const user = JSON.parse(localStorage.getItem("user"));
-            const res = await api.get("/v1/like/tweets");
+            const res = await getLikedTweets();
             console.log("LIKE DATA >> ", res)
             updatePosts(res.data.data)
         };
@@ -21,7 +21,7 @@ const MyLikedPost = () => {
 
     const removeVideoFromState = async (postId) => {
         try {
-            const res = await api.post(`/v1/like/toggle/t/${postId}`)
+            const res = await toggleTweetLike(postId)
             // console.log("This is subscribe toogle res --- ", res);
             toast.success("liked removed successfully")
         } catch (error) {

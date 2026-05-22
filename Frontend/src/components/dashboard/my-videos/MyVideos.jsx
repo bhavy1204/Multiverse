@@ -1,7 +1,7 @@
 import UserCardGrid from "../videos/UserCardGrid";
 import {useVideos} from "../VideoProvider";
 import { useEffect } from "react";
-import api from "@/api/client";
+import { getChannelVideos } from "@/api/dashboard.api";
 
 export default function MyVideos() {
 
@@ -10,7 +10,7 @@ export default function MyVideos() {
      useEffect(() => {
         const fetchMyVideos = async () => {
             const user = JSON.parse(localStorage.getItem("user"));
-            const res = await api.get(`/v1/dashboard/getChannelVideo/${user._id}`);
+            const res = await getChannelVideos(user._id);
             console.log(res.data);
             updateVideos("myVideos", res.data.data);
         };

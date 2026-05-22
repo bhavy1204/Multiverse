@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom"
-import api from "@/api/client";
+import { addToWatchHistory } from "@/api/user.api";
 
 export default function VideoCard({ title, views, thumbnail, upload, videoId }) {
 
     const handleVideoClick = async () => {
         try {
-            const res = await api.post(`/v1/users/addToWatchHistory/${videoId}`)
+            const res = await addToWatchHistory(videoId)
             console.log(res);
         } catch (err) {
             console.log("WATCH HISTORY ADD ERROR : ", err);

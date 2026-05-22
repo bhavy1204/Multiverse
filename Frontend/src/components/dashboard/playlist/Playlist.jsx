@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import api from "@/api/client";
+import { getUserPlaylists, deletePlaylist, createPlaylist } from "@/api/playlist.api";
 import toast from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUser } from "@/store/slices/authSlice";
@@ -26,7 +26,7 @@ const Playlist = () => {
 
       try {
         const userId = user.data._id;
-        const res = await api.get(`/v1/playlist/u/getplaylist/${userId}`);
+        const res = await getUserPlaylists(userId);
         setPlaylists(res.data.data);
       } catch (error) {
         console.error("Error fetching playlists:", error);
@@ -38,7 +38,7 @@ const Playlist = () => {
 
   const removePlaylistFromState = async (playlistId) => {
     try {
-      await api.delete(`/v1/playlist/p/delete/${playlistId}`);
+      await deletePlaylist(playlistId);
       toast.success("Playlist deleted successfully!");
       setPlaylists((prev) => prev.filter((p) => p._id !== playlistId));
     } catch (error) {
@@ -56,7 +56,7 @@ const Playlist = () => {
     }
 
     try {
-      const res = await api.post(`/v1/playlist/create`, {
+      const res = await createPlaylist({
         name: playlistData.name,
         description: playlistData.description,
       });

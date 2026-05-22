@@ -1,13 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import api from '@/api/client'
+import { removeFromWatchHistory } from '@/api/user.api'
 import toast from 'react-hot-toast'
 
 const HistoryCard = ({ thumbnail, title, videoId, description, views, likes, upload, onRemove }) => {
 
     const handleRemoveVideo = async (videoId) => {
         try {
-            const res = await api.delete(`/v1/users/removeFromWatchHistory/${videoId}`);
+            const res = await removeFromWatchHistory(videoId);
             console.log("THIS PART IS WOEKING WELL")
             onRemove(videoId);
             toast.success("Video removed");

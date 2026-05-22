@@ -1,7 +1,5 @@
-import UserCardGrid from "../videos/UserCardGrid";
-import { useVideos } from "../VideoProvider";
 import { useEffect, useState } from "react";
-import api from "@/api/client";
+import { getWatchHistory } from "@/api/user.api";
 import HistoryCardGrid from "./HistoryCardGrid.jsx";
 
 
@@ -12,7 +10,7 @@ export default function History() {
     useEffect(() => {
         const fetchHistory = async () => {
             // const user = JSON.parse(localStorage.getItem("user"));
-            const res =  await api.get("/v1/users/watchHistory");
+            const res =  await getWatchHistory();
             // console.log("HISTORY DATA >> ", res)
             updateVideos(res.data.data)
         };

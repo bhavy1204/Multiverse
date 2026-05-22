@@ -2,7 +2,7 @@ import React from 'react'
 import UserCardGrid from "../videos/UserCardGrid";
 import { useVideos } from "../VideoProvider";
 import { useEffect, useState } from "react";
-import api from "@/api/client";
+import { getSubscribedChannels, toggleSubscribe } from "@/api/subscription.api";
 import SubscribeToContainer from './subscribeToContainer';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUser } from '@/store/slices/authSlice';
@@ -27,7 +27,7 @@ const SubscribeTo = () => {
       // const user = JSON.parse(localStorage.getItem("user"));
       console.log("USER ", user)
       const subscriberId = user?.data?._id;
-      const res = await api.get(`/v1/subscription/u/getSubscribed/${subscriberId}`);
+      const res = await getSubscribedChannels(subscriberId);
       console.log("SUBSCRIBE DATA >> ", res)
       updateChannels(res.data.data.channels)
     };
@@ -36,7 +36,7 @@ const SubscribeTo = () => {
 
   const removeChannelFromState = async (channelId) => {
     try {
-      const res = await api.post(`/v1/subscription/toggleSubscribe/${channelId}`)
+      const res = await toggleSubscribe(channelId)
       // console.log("This is subscribe toogle res --- ", res);
       toast.success("Unsubscribed successfully")
     } catch (error) {

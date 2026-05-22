@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import api from "@/api/client";
+import { uploadVideo } from "@/api/video.api";
 import { setUser } from "@/store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 
@@ -50,7 +50,7 @@ export default function UploadVideos() {
         form.tags.forEach(tag => formData.append("tags[]", tag));
 
         try {
-            const res = await api.post("/v1/video/v1/upload", formData, {
+            const res = await uploadVideo(formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
 

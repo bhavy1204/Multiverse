@@ -1,10 +1,10 @@
-import CardGrid from "@/components/public/videos/CardGrid";
 import Navbar from "./Navbar";
 import SideBar from "./SideBar";
 import Loader from "@/components/common/Loader";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { Outlet } from "react-router-dom";
-import api from "@/api/client";
+import { getVideosPaginated } from "@/api/video.api";
+import { getAllTweets } from "@/api/tweet.api";
 
 export default function HomePage({ user }) {
     // Video states
@@ -33,7 +33,7 @@ export default function HomePage({ user }) {
     const fetchVideos = useCallback(async (currentPage) => {
         try {
             setLoading(true);
-            const res = await api.get(`/v1/video/get/all?page=${currentPage}&limit=${limit}`, {
+            const res = await getVideosPaginated(currentPage, limit, {
                 withCredentials: true,
             });
 
@@ -75,7 +75,7 @@ export default function HomePage({ user }) {
     useEffect(() => {
         const fetchTweets = async () => {
             try {
-                const res = await api.get("/v1/tweet/all");
+                const res = await getAllTweets();
                 setTweets(res.data.data || []);
             } catch (error) {
                 console.error("Error fetching tweets:", error);

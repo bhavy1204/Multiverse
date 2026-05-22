@@ -1,5 +1,5 @@
 import { ArrowDownToLine, Scissors, ThumbsUp, House, SquarePlay, GalleryVerticalEnd, Music, ShoppingCart, Clapperboard, Radio, Gamepad2, Newspaper, Trophy, Book, Shirt, Podcast, Settings, Flag, MessageSquareText, MessageCircleQuestionMark, LogOut, Clock, TvMinimalPlay, ListVideo, History, CircleUser, FilePlay, StickyNote, Heart } from 'lucide-react';
-import api from '@/api/client';
+import { logoutUser } from '@/api/auth.api';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '@/store/slices/authSlice';
@@ -26,7 +26,7 @@ export default function UserDashboardSideBar() {
     const handleLogout = async () => {
         localStorage.removeItem("user")
         dispatch(logout())
-        const res = await api.post("/v1/users/logout")
+        const res = await logoutUser()
         console.log(res);
         window.location.href = "/home/videos";
     }

@@ -1,6 +1,6 @@
 import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom";
-import api from "@/api/client";
+import { loginUser } from "@/api/auth.api";
 import { setUser } from "@/store/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -22,7 +22,7 @@ export default function Login() {
         e.preventDefault();
 
         try {
-            const res = await api.post("/v1/users/login", {
+            const res = await loginUser({
                 email: form.email,
                 password: form.password,
                 username: form.username,

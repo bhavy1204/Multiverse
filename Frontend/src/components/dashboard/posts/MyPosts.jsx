@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "@/api/client";
+import { getUserTweets } from "@/api/tweet.api";
 import { useSelector } from "react-redux";
 import { formatDistanceToNow } from "date-fns";
 import UserTweetsGrid from "./UserTweetsGrid.jsx";
@@ -13,7 +13,7 @@ export default function MyPosts() {
 
     const fetchMyTweets = async () => {
       try {
-        const res = await api.get(`/v1/tweet/u/${user?.data?._id}`);
+        const res = await getUserTweets(user?.data?._id);
         setTweets(res.data.data);
       } catch (error) {
         console.log("Comment fetch error >> ", error);

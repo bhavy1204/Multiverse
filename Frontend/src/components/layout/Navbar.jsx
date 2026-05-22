@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import api from '@/api/client';
+import { searchVideos } from '@/api/video.api';
 
 
 export default function Navbar({ toggleSidebar, setSearchQuery, setSearchResults }) {
@@ -38,7 +38,7 @@ export default function Navbar({ toggleSidebar, setSearchQuery, setSearchResults
         setSearchQuery(query);
 
         try {
-            const res = await api.get(`/v1/video/search?q=${encodeURIComponent(query)}`);
+            const res = await searchVideos(query);
             console.log("Search response >>> ", res)
             setSearchResults(res.data.data || []);
             navigate("/home/search"); // route to SearchResults

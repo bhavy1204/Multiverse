@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api from "@/api/client";
+import { getAuthMe } from "@/api/auth.api";
 
 export const fetchUser = createAsyncThunk(
     "auth/fetchUser",
     async (_, { rejectWithValue }) => {
         try {
-            const res = await api.get("/v1/users/authMe", { withCredentials: true });
+            const res = await getAuthMe({ withCredentials: true });
             // console.log("authMe response:", res.data);
             return res.data;
         } catch (err) {

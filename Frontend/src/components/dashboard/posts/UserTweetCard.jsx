@@ -1,4 +1,5 @@
 import React from "react";
+import { deleteTweet } from "@/api/tweet.api";
 
 export default function UserTweetCard({
     tweetId,
@@ -14,8 +15,8 @@ export default function UserTweetCard({
 
     const onDelete = async () => {
         try {
-            const res = api.post(`v1/comment/c/${id}`);
-            console.log("comment delete res >> ",res)
+            const res = await deleteTweet(tweetId ?? id);
+            console.log("tweet delete res >> ", res)
         } catch (error) {
 
         }

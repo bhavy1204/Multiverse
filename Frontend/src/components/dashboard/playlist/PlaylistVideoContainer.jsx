@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUser } from "@/store/slices/authSlice";
-import api from "@/api/client";
+import { getPlaylistById, removeVideoFromPlaylist } from "@/api/playlist.api";
 import { toast } from "react-hot-toast";
 
 const PlaylistVideoContainer = () => {
@@ -20,7 +20,7 @@ const PlaylistVideoContainer = () => {
   useEffect(() => {
     const fetchPlaylistVideos = async () => {
       try {
-        const res = await api.get(`/v1/playlist/getplaylist/${playlistId}`);
+        const res = await getPlaylistById(playlistId);
         setPlaylist(res.data.data);
       } catch (error) {
         console.error(error);
@@ -34,7 +34,7 @@ const PlaylistVideoContainer = () => {
 
   const removeVideoFromPlaylist = async (videoId) => {
     try {
-      await api.patch(`/v1/playlist/p/removeVideo/${playlistId}/${videoId}`);
+      await removeVideoFromPlaylist(playlistId, videoId);
       setPlaylist((prev) => ({
         ...prev,
         videos: prev.videos.filter((v) => v._id !== videoId),
